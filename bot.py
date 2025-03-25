@@ -1,10 +1,6 @@
 import os
 import logging
 import sys
-if sys.platform.startswith("win"):
-    os.system("chcp 65001")
-sys.stdout.reconfigure(encoding='utf-8')
-sys.stderr.reconfigure(encoding='utf-8')
 import asyncio
 from aiogram import Bot, Dispatcher, types
 from aiogram.types import Message
@@ -12,16 +8,25 @@ from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from database import AsyncMediaStorage
 from dotenv import load_dotenv
 
+# دعم اللغة العربية في Windows
+if sys.platform.startswith("win"):
+    os.system("chcp 65001")
+sys.stdout.reconfigure(encoding='utf-8')
+sys.stderr.reconfigure(encoding='utf-8')
+
+# تحميل متغيرات البيئة
 load_dotenv()
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 if not BOT_TOKEN:
     raise ValueError("🚨 خطأ: لم يتم العثور على BOT_TOKEN في ملف .env")
 
+# إعداد البوت
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(bot)
 storage = AsyncMediaStorage("media.db")
 
+# تسجيل الأخطاء
 logger = logging.getLogger(__name__)
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -31,16 +36,7 @@ logging.basicConfig(
 
 dp.middleware.setup(LoggingMiddleware(logger))
 
-def _format_size(size: int) -> str:
-    """تحويل الحجم إلى صيغة سهلة القراءة"""
-    units = ['B', 'KB', 'MB', 'GB']
-    idx = 0
-    while size >= 1024 and idx < 3:
-        size /= 1024
-        idx += 1
-    return f"{size:.2f}{units[idx]}"
-
-
+# --- دوال مساعدة ---
 def _get_send_method(file_type: str):
     """إرجاع الدالة المناسبة لإرسال الملفات"""
     methods = {
@@ -53,17 +49,13 @@ def _get_send_method(file_type: str):
     return methods.get(file_type, bot.send_document)
 
 
+# --- استقبال الملفات وحفظها ---
 @dp.message_handler(content_types=[
-    types.ContentType.PHOTO,
-    types.ContentType.VIDEO,
-    types.ContentType.DOCUMENT,
-    types.ContentType.AUDIO,
-    types.ContentType.ANIMATION
+    types.ContentType.PHOTO, types.ContentType.VIDEO, types.ContentType.DOCUMENT,
+    types.ContentType.AUDIO, types.ContentType.ANIMATION
 ])
 async def handle_media(message: Message):
     try:
-        print(f"📩 استقبال ملف من {message.from_user.id} - النوع: {message.content_type}")
-        
         content_type = message.content_type
         file_id = None
         file_meta = {}
@@ -73,51 +65,69 @@ async def handle_media(message: Message):
             file_meta = {"file_name": message.document.file_name, "mime_type": message.document.mime_type}
 
         if file_id:
-            print(f"✅ محاولة حفظ الملف في قاعدة البيانات: {file_id}")
-            await storage.asave_file(
-                file_id=file_id,
-                file_type=content_type,
-                user_id=message.from_user.id,
-                meta_data=file_meta
-            )
-            print("✅ تم الحفظ بنجاح!")
-            await message.reply("📁 تم حفظ الملف بنجاح!")
+            await storage.asave_file(file_id=file_id, file_type=content_type, user_id=message.from_user.id, meta_data=file_meta)
+            await message.reply("✅ **تم حفظ الملف بنجاح!**")
         else:
-            print("⚠️ لم يتم العثور على ملف!")
-            await message.reply("⚠️ تعذر استخراج معلومات الملف")
+            await message.reply("⚠️ **لم يتم العثور على ملف!**")
     except Exception as e:
-        print(f"❌ خطأ أثناء حفظ الملف: {e}")
         logger.error(f"خطأ في معالجة الملف: {str(e)}", exc_info=True)
-        await message.reply("❌ حدث خطأ فني أثناء معالجة الملف، يرجى المحاولة لاحقًا")
+        await message.reply("❌ **حدث خطأ أثناء حفظ الملف، يرجى المحاولة لاحقًا**")
 
 
+# --- استرجاع آخر ملف مخزن ---
 @dp.message_handler(commands=['play', 'latest'])
 async def send_latest_file(message: Message):
     try:
         media = await storage.aget_latest_file()
-
         if not media:
-            await message.reply("📭 لا يوجد ملفات مخزنة بعد\n"
-                                "يمكنك إرسال أي ملف وسأحفظه لك!")
+            await message.reply("📭 **لا يوجد ملفات مخزنة بعد!**\n📝 **أرسل ملفًا وسأحفظه لك**")
             return
 
         file_id, file_type = media
         send_method = _get_send_method(file_type)
-
-        try:
-            await send_method(message.chat.id, file_id)
-            await message.reply("✅ تم إرسال آخر ملف مخزن")
-        except Exception as e:
-            logger.error(f"خطأ أثناء الإرسال: {str(e)}", exc_info=True)
-            await message.reply("⏳ حدثت مشكلة في الخادم، يرجى المحاولة مرة أخرى بعد قليل")
+        await send_method(message.chat.id, file_id)
+        await message.reply("✅ **تم إرسال آخر ملف مخزن!**")
     except Exception as e:
-        logger.error(f"خطأ غير متوقع: {str(e)}", exc_info=True)
-        await message.reply("❌ حدث خطأ غير متوقع أثناء الاسترجاع")
+        logger.error(f"خطأ أثناء الإرسال: {str(e)}", exc_info=True)
+        await message.reply("⏳ **حدثت مشكلة، يرجى المحاولة مرة أخرى لاحقًا**")
 
 
+# --- البحث عن الملفات ---
+@dp.message_handler(commands=['search'])
+async def search_files(message: Message):
+    query = message.get_args().strip()
+    if not query:
+        await message.reply("🔎 **يرجى إدخال الكلمة المراد البحث عنها**\nمثال: `/search pdf`")
+        return
+
+    results = await storage.asearch_files(query)
+    if not results:
+        await message.reply(f"❌ **لم يتم العثور على ملفات تحتوي على: `{query}`**")
+        return
+
+    response = "🔍 **نتائج البحث:**\n\n"
+    for file_id, file_type, meta_data in results:
+        response += f"📂 `{meta_data}` - {file_type}\n"
+
+    await message.reply(response)
+
+
+# --- حذف الملفات القديمة ---
+@dp.message_handler(commands=['clear_old'])
+async def clear_old_files(message: Message):
+    args = message.get_args().strip()
+    if not args.isdigit():
+        await message.reply("⚠️ **يرجى إدخال عدد الأيام بشكل صحيح**\nمثال: `/clear_old 30`")
+        return
+
+    days = int(args)
+    await storage.adelete_old_files(days)
+    await message.reply(f"✅ **تم حذف الملفات الأقدم من {days} يومًا بنجاح!**")
+
+
+# --- تشغيل البوت ---
 async def main():
     await dp.start_polling()
 
 if __name__ == "__main__":
     asyncio.run(main())
-0
