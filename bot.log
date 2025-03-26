@@ -121,3 +121,15 @@ client_session: <aiohttp.client.ClientSession object at 0x000002302FAF8750>
 2025-03-25 15:51:45,147 - asyncio - ERROR - Unclosed connector
 connections: ['[(<aiohttp.client_proto.ResponseHandler object at 0x0000023030D61C50>, 9771.859)]']
 connector: <aiohttp.connector.TCPConnector object at 0x0000023030A42610>
+2025-03-26 14:25:16,529 - aiogram.dispatcher.dispatcher - INFO - Start polling.
+2025-03-26 14:25:36,515 - __main__ - INFO - Received message [ID:12] in chat [private:1997410197]
+2025-03-26 14:25:36,640 - __main__ - INFO - Process update [ID:461266794]: [success] (in 125 ms)
+2025-03-26 14:25:47,019 - __main__ - INFO - Received message [ID:128] in chat [supergroup:-1002585463789]
+2025-03-26 14:25:47,434 - __main__ - INFO - Process update [ID:461266795]: [success] (in 415 ms)
+2025-03-26 14:25:54,756 - aiogram.dispatcher.dispatcher - WARNING - Polling is stopped.
+2025-03-26 14:25:54,792 - aiogram.dispatcher.dispatcher - INFO - Stop polling...
+2025-03-26 14:25:54,792 - asyncio - ERROR - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x0000029690ACBA10>
+2025-03-26 14:25:54,792 - asyncio - ERROR - Unclosed connector
+connections: ['[(<aiohttp.client_proto.ResponseHandler object at 0x00000296945DE890>, 1982.078)]']
+connector: <aiohttp.connector.TCPConnector object at 0x0000029693383850>
