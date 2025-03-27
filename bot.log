@@ -133,3 +133,33 @@ client_session: <aiohttp.client.ClientSession object at 0x0000029690ACBA10>
 2025-03-26 14:25:54,792 - asyncio - ERROR - Unclosed connector
 connections: ['[(<aiohttp.client_proto.ResponseHandler object at 0x00000296945DE890>, 1982.078)]']
 connector: <aiohttp.connector.TCPConnector object at 0x0000029693383850>
+2025-03-27 11:26:20,655 - aiogram.dispatcher.dispatcher - INFO - Start polling.
+2025-03-27 11:26:34,875 - __main__ - INFO - Received message [ID:34] in chat [private:1997410197]
+2025-03-27 11:26:35,152 - __main__ - INFO - Process update [ID:461266813]: [success] (in 277 ms)
+2025-03-27 11:26:46,150 - __main__ - INFO - Received message [ID:36] in chat [private:1997410197]
+2025-03-27 11:26:46,470 - __main__ - INFO - Process update [ID:461266814]: [success] (in 319 ms)
+2025-03-27 11:28:49,400 - aiogram.dispatcher.dispatcher - WARNING - Polling is stopped.
+2025-03-27 11:28:49,437 - aiogram.dispatcher.dispatcher - INFO - Stop polling...
+2025-03-27 11:28:49,437 - asyncio - ERROR - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x00000245C90BDF50>
+2025-03-27 11:28:53,625 - aiogram.dispatcher.dispatcher - INFO - Start polling.
+2025-03-27 11:29:00,913 - __main__ - INFO - Received message [ID:38] in chat [private:1997410197]
+2025-03-27 11:29:01,090 - __main__ - INFO - Process update [ID:461266815]: [success] (in 177 ms)
+2025-03-27 11:31:48,263 - aiogram.dispatcher.dispatcher - WARNING - Polling is stopped.
+2025-03-27 11:31:48,289 - aiogram.dispatcher.dispatcher - INFO - Stop polling...
+2025-03-27 11:31:48,290 - asyncio - ERROR - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x000002BC8F9E67D0>
+2025-03-27 11:31:52,981 - aiogram.dispatcher.dispatcher - INFO - Start polling.
+2025-03-27 11:32:13,460 - __main__ - INFO - Received message [ID:40] in chat [private:1997410197]
+2025-03-27 11:32:13,624 - __main__ - INFO - Process update [ID:461266816]: [success] (in 180 ms)
+2025-03-27 11:32:19,537 - __main__ - INFO - Received message [ID:42] in chat [private:1997410197]
+2025-03-27 11:32:25,996 - __main__ - INFO - Received message [ID:43] in chat [private:1997410197]
+2025-03-27 11:32:29,176 - __main__ - INFO - Received message [ID:44] in chat [private:1997410197]
+2025-03-27 11:32:38,441 - __main__ - INFO - Received message [ID:45] in chat [private:1997410197]
+2025-03-27 11:32:38,972 - __main__ - INFO - Process update [ID:461266820]: [success] (in 531 ms)
+2025-03-27 11:32:42,243 - __main__ - INFO - Received callback query [ID:8578811475098759265] from user [ID:1997410197] for message [ID:47] in chat [private:1997410197] with data: delete_latest originally posted by user [ID:7972319914]
+2025-03-27 11:32:42,243 - __main__ - INFO - Unhandled callback query [ID:8578811475098759265] from user [ID:1997410197] for message [ID:47] in chat [private:1997410197] with data: delete_latest originally posted by user [ID:7972319914]
+2025-03-27 11:44:29,781 - aiogram.dispatcher.dispatcher - WARNING - Polling is stopped.
+2025-03-27 11:44:29,840 - aiogram.dispatcher.dispatcher - INFO - Stop polling...
+2025-03-27 11:44:29,840 - asyncio - ERROR - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x0000022CFBECCF50>
